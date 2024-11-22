@@ -102,6 +102,29 @@ void Descend()
     CurrentHeight = TargetActorCoords.y;
 }
 
+// Movement Control
+void Move(int forward = 0, int sideways = 0)
+{
+    if (forward > 0)
+    {
+        TargetActorCoords.x -= 0.1f;
+    }
+    else if (forward < 0)
+    {
+        TargetActorCoords.x += 0.1f;
+    }
+    if (sideways > 0)
+    {
+        TargetActorCoords.z -= 0.1f;
+    }
+    else if (sideways < 0)
+    {
+        TargetActorCoords.z += 0.1f;
+    }
+    UNSORTED::TELEPORT_ACTOR(TargetActor, &TargetActorCoords, false, false, false);
+    PrevTargetedActorLastCoords = TargetActorCoords;
+}
+
 // Ideal Float
 void Ideal()
 {
@@ -131,7 +154,7 @@ void Application::Initialize(HMODULE _Module)
                     }
                     else
                     {
-                        PlayerActor = -1;
+                        PlayerActor = 0;
                         UNSORTED::PRINT_OBJECTIVE_B("<red>Lasso Baloon Deactive\n", 1.0f, true, 1, 0, 0, 0, 0);
                     }
                 }
@@ -165,6 +188,26 @@ void Application::Initialize(HMODULE _Module)
                         else if (Input::IsKeyPressed(KEY_LEFT_ALT))
                         {
                             Descend();
+                        }
+                        // Move Forward
+                        if(Input::IsKeyPressed(KEY_W))
+                        {
+                            Move(1, 0);
+                        }
+                        // Move Backward
+                        if (Input::IsKeyPressed(KEY_S))
+                        {
+                            Move(-1, 0);
+                        }
+                        // Move Right
+                        if (Input::IsKeyPressed(KEY_D))
+                        {
+                            Move(0, 1);
+                        }
+                        // Move Left
+                        if (Input::IsKeyPressed(KEY_A))
+                        {
+                            Move(0, -1);
                         }
                         // When Ideal (no Control)
                         else
